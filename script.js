@@ -146,7 +146,7 @@ function logEvent(eventDescription) {
     events.push(event);
     localStorage.setItem('events', JSON.stringify(events));
 
-    fetch('https://weblabserver7.railway.internal/log_event', {
+    fetch('http://weblabserver7.railway.internal/log_event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(event),
@@ -164,7 +164,7 @@ function logBatchEvents() {
     const events = JSON.parse(localStorage.getItem('events')) || [];
     if (events.length === 0) return;
 
-    fetch('https://weblabserver7.railway.internal/log_batch', {
+    fetch('http://weblabserver7.railway.internal/log_batch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(events)
