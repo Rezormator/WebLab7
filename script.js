@@ -158,6 +158,7 @@ function logEvent(eventDescription) {
             console.log(`Server time: ${data.server_time}, Local time: ${localTimestamp}`);
         })
         .catch(err => console.error("Error logging event:", err));
+
 }
 
 function logBatchEvents() {
