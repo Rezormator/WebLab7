@@ -136,34 +136,40 @@ function reloadAnimation() {
 }
 
 function logEvent(eventDescription) {
+    const localTimestamp = new Date().toLocaleString();
     const event = {
-        timestamp: new Date().toLocaleString(),
-        description: eventDescription
+        description: eventDescription,
+        timestamp: localTimestamp
     };
 
     const events = JSON.parse(localStorage.getItem('events')) || [];
     events.push(event);
     localStorage.setItem('events', JSON.stringify(events));
 
-    fetch('http://localhost:5000/log_event', {
+    fetch('http://weblabserver7.railway.internal/log_event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(event)
-    });
+        body: JSON.stringify(event),
+        mode: 'cors'
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Event logged:", data);
+            console.log(`Server time: ${data.server_time}, Local time: ${localTimestamp}`);
+        })
+        .catch(err => console.error("Error logging event:", err));
 }
 
 function logBatchEvents() {
     const events = JSON.parse(localStorage.getItem('events')) || [];
     if (events.length === 0) return;
 
-    // Відправлення всіх подій на сервер у батчі
-    fetch('http://localhost:5000/log_batch', {
+    fetch('http://weblabserver7.railway.internal/log_batch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(events)
     });
 
-    // Очищаємо LocalStorage після відправлення
     localStorage.removeItem('events');
 }
 
